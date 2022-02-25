@@ -1,15 +1,15 @@
-package com.ut3.ballparty;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.ut3.ballparty.game;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class MainActivity extends Activity {
+import com.ut3.ballparty.R;
+
+public class GameActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(new GameView(this));
     }
 }
