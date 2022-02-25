@@ -1,15 +1,15 @@
 package com.ut3.ballparty.game;
 
+import com.ut3.ballparty.R;
 import android.app.Activity;
 import android.os.Bundle;
-
-import com.ut3.ballparty.R;
 
 public class GameActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        findViewById(R.id.button);
         setContentView(new GameView(this));
     }
 }
