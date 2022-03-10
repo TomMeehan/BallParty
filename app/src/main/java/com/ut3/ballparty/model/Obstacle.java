@@ -5,5 +5,4 @@ import android.graphics.Color;
 public class Obstacle extends GridObject {
 
     private boolean destructible;
-    private Color color;
 }

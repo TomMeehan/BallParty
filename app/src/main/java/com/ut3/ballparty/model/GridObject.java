@@ -2,13 +2,13 @@ package com.ut3.ballparty.model;
 
 public class GridObject {
 
-    private Position pos;
+    protected int color;
 
-    public Position getPos() {
-        return pos;
+    public int getColor() {
+        return color;
     }
 
-    public void setPos(Position pos) {
-        this.pos = pos;
+    public void setColor(int color) {
+        this.color = color;
     }
 }
