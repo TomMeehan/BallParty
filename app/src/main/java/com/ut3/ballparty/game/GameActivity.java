@@ -9,7 +9,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViewById(R.id.button);
+        findViewById(R.id.jouer);
         setContentView(new GameView(this));
     }
 }
