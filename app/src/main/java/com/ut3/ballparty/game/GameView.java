@@ -1,6 +1,9 @@
 package com.ut3.ballparty.game;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -8,11 +11,20 @@ import androidx.annotation.NonNull;
 
 import com.ut3.ballparty.game.threads.DrawThread;
 import com.ut3.ballparty.game.threads.UpdateThread;
+import com.ut3.ballparty.model.CalculSwitchEvent;
+
+import java.util.ArrayList;
 
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 
-    private DrawThread drawThread;
-    private UpdateThread updateThread;
+    private final DrawThread drawThread;
+    private final UpdateThread updateThread;
+
+    private final CalculSwitchEvent calculSwitchEvent;
+    private ArrayList<Integer> listEvent;
+    private int i;
+    private boolean flag;
+    private final Handler mHandler;
 
     public GameView(Context context) {
         super(context);
@@ -24,6 +36,12 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
         //Threads
         drawThread = new DrawThread();
         updateThread = new UpdateThread();
+
+        //onTouch Swap
+        calculSwitchEvent = new CalculSwitchEvent();
+        i = 0;
+        flag = true;
+        mHandler = new Handler();
     }
 
     @Override
@@ -52,4 +70,36 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
             retry = false;
         }
     }
+
+    private final Runnable mUpdateSwipTask = new Runnable(){
+        public void run(){
+            flag = true;
+        }
+    };
+
+    @Override
+    public boolean onTouchEvent (MotionEvent event){
+        if(flag){
+            int action = event.getActionMasked();
+            switch (action){
+                case MotionEvent.ACTION_DOWN:
+                    i = 0;
+                    listEvent = new ArrayList<>();
+                case MotionEvent.ACTION_MOVE:
+                    i++;
+                    listEvent.add((int)event.getX());
+                    if(i>10) {
+                        flag = false;
+                        mHandler.postDelayed(mUpdateSwipTask, 300);
+                        int direction = calculSwitchEvent.calculateDirection(listEvent);
+                        Log.d("MOVE switch direction", String.valueOf(direction));
+                    }
+            }
+
+        }
+
+        return true;
+    }
+
+
 }
