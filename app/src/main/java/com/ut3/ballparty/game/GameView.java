@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -14,6 +17,7 @@ import com.ut3.ballparty.game.threads.DrawThread;
 import com.ut3.ballparty.game.threads.UpdateThread;
 import com.ut3.ballparty.model.Grid;
 import com.ut3.ballparty.model.GridObject;
+import com.ut3.ballparty.model.Obstacle;
 import com.ut3.ballparty.model.exceptions.PositionException;
 
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
@@ -21,10 +25,21 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
     private DrawThread drawThread;
     private UpdateThread updateThread;
 
+    private Point windowSize;
+    private int cellWidth;
+    private int cellHeight;
+
     private Grid grid;
 
-    public GameView(Context context) {
+    private Handler tickHandler;
+    private int tickTimer = 1000;
+
+    public GameView(Context context, Point windowSize) {
         super(context);
+
+        this.windowSize = windowSize;
+        this.cellWidth = windowSize.x/Grid.H_SIZE;
+        this.cellHeight = windowSize.y/Grid.V_SIZE;
 
         //Surface
         getHolder().addCallback(this);
@@ -33,10 +48,24 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
         //Game Grid
         this.grid = new Grid();
 
+        this.grid.add(new Obstacle(Color.rgb(250, 0, 0), false), Grid.H_SIZE-1, 0);
+
         //Threads
         drawThread = new DrawThread(getHolder(), this);
         updateThread = new UpdateThread(this);
+
+        //Tick Handler
+        tickHandler = new Handler();
+        tickHandler.postDelayed(doTick, tickTimer);
     }
+
+    private Runnable doTick = new Runnable() {
+        @Override
+        public void run() {
+            grid.tick();
+            tickHandler.postDelayed(this, tickTimer);
+        }
+    };
 
     @Override
     public void draw(Canvas canvas) {
@@ -51,16 +80,12 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 
     private void drawGrid(Canvas canvas) {
         for(int i = 0; i < Grid.H_SIZE; i++){
-            for (int j = 0; j < Grid.V_SIZE; j++){
-                try{
-                    GridObject obj = grid.get(i,j);
-                    if (obj != null){
-                        Paint paint = new Paint();
-                        paint.setColor(obj.getColor());
-                        //canvas.drawRect(x, y, x+100, y+100, paint);
-                    }
-                } catch (PositionException e){
-                    Log.d("POSITION", "Impossible de récupérer l'objet aux coordonnées " + i + "," + j);
+            for (int j = Grid.V_SIZE-1; j >= 0 ; j--){
+                GridObject obj = grid.get(i,j);
+                if (obj != null){
+                    Paint paint = new Paint();
+                    paint.setColor(obj.getColor());
+                    canvas.drawRect((i*cellWidth), (j*cellHeight), (i*cellWidth)+cellWidth, (j*cellHeight)+cellHeight, paint);
                 }
             }
         }

@@ -4,6 +4,12 @@ public class GridObject {
 
     protected int color;
 
+    public GridObject(){}
+
+    public GridObject(int color){
+        this.color = color;
+    }
+
     public int getColor() {
         return color;
     }

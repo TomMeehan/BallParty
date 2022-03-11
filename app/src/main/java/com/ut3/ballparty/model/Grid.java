@@ -1,5 +1,7 @@
 package com.ut3.ballparty.model;
 
+import android.util.Log;
+
 import com.ut3.ballparty.model.exceptions.PositionException;
 import com.ut3.ballparty.model.exceptions.UnhandledCollisionException;
 
@@ -9,50 +11,71 @@ public class Grid {
     public static final int V_SIZE = 6;
 
     private GridObject[][] grid = new GridObject[H_SIZE][V_SIZE];
-    private int playerPosition = Position.CENTER;
+    private int playerHPos = Position.CENTER;
+    private final int playerVPos = V_SIZE-1;
 
     public Grid(){
-        this.grid[playerPosition][0] = new Player();
+        this.grid[playerHPos][playerVPos] = new Player();
     }
 
-    public GridObject get(int hPos, int vPos) throws PositionException {
-        checkPos(hPos, vPos);
+    public GridObject get(int hPos, int vPos) {
+        try {
+            checkPos(hPos, vPos);
+        } catch (PositionException e) {
+            Log.d("POSITION", e.getMessage());
+        }
         return grid[hPos][vPos];
     }
 
-    public void add(GridObject object, int hPos, int vPos) throws PositionException {
-        checkPos(hPos, vPos);
+    public void add(GridObject object, int hPos, int vPos) {
+        try {
+            checkPos(hPos, vPos);
+        } catch (PositionException e){
+            Log.d("POSITION", e.getMessage());
+        }
         this.grid[hPos][vPos] = object;
     }
 
-    public GridObject remove(int hPos, int vPos) throws PositionException {
-        checkPos(hPos, vPos);
+    public GridObject remove(int hPos, int vPos) {
+        try {
+            checkPos(hPos, vPos);
+        } catch (PositionException e) {
+            Log.d("POSITION", e.getMessage());
+        }
         GridObject removedObject = this.grid[hPos][vPos];
         this.grid[hPos][vPos] = null;
         return removedObject;
     }
 
-    public void movePlayerLeft() throws UnhandledCollisionException {
-        if (playerPosition != Position.LEFT){
-            if (grid[playerPosition - 1][0] != null){
-                handleCollision(grid[playerPosition][0], grid[playerPosition - 1][0]);
+    public void movePlayerLeft() {
+        if (playerHPos != Position.LEFT){
+            if (grid[playerHPos - 1][playerVPos] != null){
+                try {
+                    handleCollision(grid[playerHPos][playerVPos], grid[playerHPos - 1][playerVPos]);
+                } catch (UnhandledCollisionException e) {
+                    Log.d("COLLISION", e.getMessage());
+                }
             }
         }
     }
 
-    public void movePlayerRight() throws UnhandledCollisionException {
-        if (playerPosition != Position.RIGHT){
-            if (grid[playerPosition + 1][0] != null){
-                handleCollision(grid[playerPosition][0], grid[playerPosition + 1][0]);
+    public void movePlayerRight(){
+        if (playerHPos != Position.RIGHT){
+            if (grid[playerHPos + 1][playerVPos] != null){
+                try {
+                    handleCollision(grid[playerHPos][playerVPos], grid[playerHPos + 1][playerVPos]);
+                } catch (UnhandledCollisionException e) {
+                    Log.d("COLLISION", e.getMessage());
+                }
             }
         }
     }
 
-    public void tick() throws PositionException, UnhandledCollisionException {
+    public void tick() {
         for (int i = 0; i < H_SIZE; i++){
-            for (int j = 0; j < V_SIZE; j++){
+            for (int j = V_SIZE-1; j >= 0; j--){
                 if (!(grid[i][j] instanceof Player)){
-                    if ( j == 0) {
+                    if ( j == (V_SIZE-1)) {
                         remove(i,j);
                     } else {
                         moveDown(i,j);
@@ -62,11 +85,15 @@ public class Grid {
         }
     }
 
-    private void moveDown(int hPos, int vPos) throws PositionException, UnhandledCollisionException {
-        if (grid[hPos][vPos - 1] != null){
-            handleCollision(grid[hPos][vPos - 1], grid[hPos][vPos]);
+    private void moveDown(int hPos, int vPos) {
+        if (grid[hPos][vPos + 1] != null){
+            try {
+                handleCollision(grid[hPos][vPos + 1], grid[hPos][vPos]);
+            } catch (UnhandledCollisionException e) {
+                Log.d("COLLISION", e.getMessage());
+            }
         } else {
-            add(grid[hPos][vPos], hPos, vPos - 1);
+            add(grid[hPos][vPos], hPos, vPos + 1);
             remove(hPos, vPos);
         }
     }

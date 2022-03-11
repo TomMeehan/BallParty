@@ -4,7 +4,10 @@ public class Player extends GridObject {
 
     private int score;
 
-    public Player(){
+    public Player(){}
+
+    public Player(int color){
+        super(color);
         this.score = 0;
     }
 
