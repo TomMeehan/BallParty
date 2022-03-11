@@ -9,7 +9,7 @@ public class Obstacle extends GridObject {
     public Obstacle(){}
 
     public Obstacle(int color, boolean destructible){
-        super(color);
+        super(color, Shape.SQUARE);
         this.destructible = destructible;
     }
 

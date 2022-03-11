@@ -7,7 +7,7 @@ public class Player extends GridObject {
     public Player(){}
 
     public Player(int color){
-        super(color);
+        super(color, Shape.CIRCLE);
         this.score = 0;
     }
 

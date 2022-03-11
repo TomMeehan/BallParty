@@ -1,5 +1,6 @@
 package com.ut3.ballparty.model;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.ut3.ballparty.model.exceptions.PositionException;
@@ -15,7 +16,7 @@ public class Grid {
     private final int playerVPos = V_SIZE-1;
 
     public Grid(){
-        this.grid[playerHPos][playerVPos] = new Player();
+        this.grid[playerHPos][playerVPos] = new Player(Color.rgb(0, 0, 0));
     }
 
     public GridObject get(int hPos, int vPos) {
@@ -103,7 +104,8 @@ public class Grid {
         if (object instanceof Bonus){
             ((Player) player).addScore(((Bonus) object).getScore());
         } else if (object instanceof Obstacle) {
-            //END GAME
+            //GAME LOST
+            Log.d("END", "you lost the game");
         }
     }
 

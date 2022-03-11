@@ -18,6 +18,7 @@ import com.ut3.ballparty.game.threads.UpdateThread;
 import com.ut3.ballparty.model.Grid;
 import com.ut3.ballparty.model.GridObject;
 import com.ut3.ballparty.model.Obstacle;
+import com.ut3.ballparty.model.Player;
 import com.ut3.ballparty.model.exceptions.PositionException;
 
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
@@ -85,7 +86,14 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
                 if (obj != null){
                     Paint paint = new Paint();
                     paint.setColor(obj.getColor());
-                    canvas.drawRect((i*cellWidth), (j*cellHeight), (i*cellWidth)+cellWidth, (j*cellHeight)+cellHeight, paint);
+                    switch (obj.getShape()){
+                        case CIRCLE:
+                            canvas.drawCircle((i*cellWidth)+(cellWidth/2), (j*cellHeight)+(cellHeight/2), cellWidth/4, paint);
+                            break;
+                        case SQUARE:
+                            canvas.drawRect((i*cellWidth), (j*cellHeight), (i*cellWidth)+cellWidth, (j*cellHeight)+cellHeight, paint);
+                            break;
+                    }
                 }
             }
         }
