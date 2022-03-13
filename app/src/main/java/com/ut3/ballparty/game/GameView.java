@@ -1,6 +1,10 @@
 package com.ut3.ballparty.game;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,7 +19,7 @@ import com.ut3.ballparty.model.CalculSwitchEvent;
 
 import java.util.ArrayList;
 
-public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
+public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
     private final DrawThread drawThread;
     private final UpdateThread updateThread;
@@ -42,6 +46,8 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
         i = 0;
         flag = true;
         mHandler = new Handler();
+
+
     }
 
     @Override
@@ -100,6 +106,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 
         return true;
     }
+
 
 
 }
