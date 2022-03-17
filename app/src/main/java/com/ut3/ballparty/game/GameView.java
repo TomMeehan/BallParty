@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.VectorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,11 +19,14 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
+import com.ut3.ballparty.R;
 import com.ut3.ballparty.game.sensors.OnSwipeTouchListener;
 import com.ut3.ballparty.game.sensors.OnTiltEventListener;
 import com.ut3.ballparty.game.threads.DrawThread;
 import com.ut3.ballparty.game.threads.UpdateThread;
+import com.ut3.ballparty.model.Bonus;
 import com.ut3.ballparty.model.Grid;
 import com.ut3.ballparty.model.GridObject;
 import com.ut3.ballparty.model.Obstacle;
@@ -104,7 +108,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
         if (canvas != null) {
             Log.d("GAME", "Canvas is drawing");
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.BLACK);
             drawGrid(canvas);
         }
     }
@@ -114,16 +118,21 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
             for (int j = Grid.V_SIZE-1; j >= 0 ; j--){
                 GridObject obj = grid.get(i,j);
                 if (obj != null){
-                    Paint paint = new Paint();
-                    paint.setColor(obj.getColor());
-                    switch (obj.getShape()){
-                        case CIRCLE:
-                            canvas.drawCircle((i*cellWidth)+(cellWidth/2), (j*cellHeight)+(cellHeight/2), cellWidth/4, paint);
-                            break;
-                        case SQUARE:
-                            canvas.drawRect((i*cellWidth), (j*cellHeight), (i*cellWidth)+cellWidth, (j*cellHeight)+cellHeight, paint);
-                            break;
+                    VectorDrawableCompat graphics;
+                    if (obj instanceof Obstacle) {
+                        if (((Obstacle) obj).isDestructible()) {
+                            graphics = VectorDrawableCompat.create(getContext().getResources(), R.drawable.ic_squid, null);
+                        } else {
+                            graphics = VectorDrawableCompat.create(getContext().getResources(), R.drawable.ic_rock, null);
+                        }
+                    } else if (obj instanceof Bonus) {
+                        graphics = VectorDrawableCompat.create(getContext().getResources(), R.drawable.ic_astronaut, null);
+                    } else {
+                        graphics = VectorDrawableCompat.create(getContext().getResources(), R.drawable.ic_rocket, null);
                     }
+                    graphics.setBounds((i*cellWidth), (j*cellHeight), (i*cellWidth)+cellWidth, (j*cellHeight)+cellHeight);
+                    canvas.translate(0, 0);
+                    graphics.draw(canvas);
                 }
             }
         }

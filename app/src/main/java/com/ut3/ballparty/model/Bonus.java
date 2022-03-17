@@ -5,8 +5,7 @@ public class Bonus extends GridObject {
 
     public Bonus(){}
 
-    public Bonus(int color, int score) {
-        super(color, Shape.SQUARE);
+    public Bonus(int score) {
         this.score = score;
     }
 
