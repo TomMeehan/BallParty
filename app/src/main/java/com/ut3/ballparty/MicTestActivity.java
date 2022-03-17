@@ -7,6 +7,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
@@ -43,13 +44,15 @@ public class MicTestActivity extends AppCompatActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mediaRecorder.setOutputFile("${externalCacheDir.absolutePath}/test.3gp"); // "/dev/null" fait planter visiblement
+        //mediaRecorder.setOutputFile("${externalCacheDir.absolutePath}/test.3gp"); // "/dev/null" fait planter visiblement
+        Log.d("MicTestActivityStarted", "Files location: " + getFilesDir());
+        mediaRecorder.setOutputFile(getFilesDir() + "/test.3gp"); // "/dev/null" fait planter visiblement, mais au moins il prepare
         try {
             mediaRecorder.prepare();
             Log.d("MicTestActivityStarted", "Media recorder prepared I guess?");
             mediaRecorder.start();
             Log.d("MicTestActivityStarted", "Media recorder started I guess?");
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d("MicTestActivityStarted", "HOLY SHIT BRO IT DIDN'T WORK");
             Log.d("MicTestActivityStarted", e.getMessage());
         }
@@ -73,8 +76,9 @@ public class MicTestActivity extends AppCompatActivity {
 
     private double getAmplitude() {
         if (mediaRecorder != null) {
-            Log.d("MicTestActivity", "Media recorder not null, max amplitude = " + mediaRecorder.getMaxAmplitude());
-            return mediaRecorder.getMaxAmplitude();
+            double amplitude = mediaRecorder.getMaxAmplitude();
+            Log.d("MicTestActivity", "Media recorder not null, max amplitude = " + amplitude);
+            return amplitude;
         } else {
             Log.d("MicTestActivity", "Media recorder is null or not started, returning 0");
             return 0;
