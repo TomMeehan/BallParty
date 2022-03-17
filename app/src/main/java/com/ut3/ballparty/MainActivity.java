@@ -31,10 +31,10 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        TextView scoreValue = findViewById(R.id.scoreValue);
-        SharedPreferences sharedScore = this.getPreferences(Context.MODE_PRIVATE);
+        TextView scoreValue = findViewById(R.id.scoreText);
+        SharedPreferences sharedScore = this.getSharedPreferences("score",Context.MODE_PRIVATE);
         int score = sharedScore.getInt("score",0);
-        scoreValue.setText(String.valueOf(score));
+        scoreValue.setText(scoreValue.getText()+String.valueOf(score));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);

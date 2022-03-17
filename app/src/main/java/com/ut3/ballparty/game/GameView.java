@@ -2,6 +2,7 @@ package com.ut3.ballparty.game;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
@@ -64,6 +66,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
     private Point windowSize;
     private int cellWidth;
     private int cellHeight;
+
+    public Grid getGrid() {
+        return grid;
+    }
 
     private Grid grid;
 
@@ -115,6 +121,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         micThread.run();
     }
 
+
     public void initializeSensors(SensorManager sm){
         this.onTiltEventListener = new OnTiltEventListener(grid);
         Sensor mMagneticField = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -144,6 +151,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         mediaRecorder = null;
         audioInput.delete();
 
+        SharedPreferences sharedScore = getContext().getSharedPreferences("score",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedScore.edit();
+        editor.putInt("score", grid.getScore());
+        editor.apply();
         Intent intent = new Intent(getContext(), EndingActivity.class);
         getContext().startActivity(intent);
     }
