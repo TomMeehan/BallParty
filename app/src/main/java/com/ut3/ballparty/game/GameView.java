@@ -9,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaRecorder;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -26,6 +27,8 @@ import com.ut3.ballparty.model.GridObject;
 import com.ut3.ballparty.model.Obstacle;
 import com.ut3.ballparty.model.CalculSwitchEvent;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,6 +38,23 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
     private final DrawThread drawThread;
     private final UpdateThread updateThread;
 
+    private Handler micHandler;
+    private final Runnable micThread = new Runnable() {
+        @Override
+        public void run() {
+            if (mediaRecorder != null) {
+                double amplitude = mediaRecorder.getMaxAmplitude();
+                if (amplitude > MIN_VOLUME) {
+                    //On détruit le bloc juste devant le joueur
+                    if (grid.get(grid.getPlayerHPos(), grid.getPlayerVPos()-1) instanceof Obstacle && ((Obstacle) grid.get(grid.getPlayerHPos(), grid.getPlayerVPos()-1)).isDestructible()) {
+                        grid.remove(grid.getPlayerHPos(), grid.getPlayerVPos()-1);
+                    }
+                }
+                micHandler.postDelayed(this, 1000/60);
+            }
+        }
+    };
+
     private Point windowSize;
     private int cellWidth;
     private int cellHeight;
@@ -43,6 +63,11 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
     private OnSwipeTouchListener onSwipeTouchListener;
     private OnTiltEventListener onTiltEventListener;
+
+    private MediaRecorder mediaRecorder;
+    private File audioInput;
+
+    private final int MIN_VOLUME = 10000;
 
     public GameView(Context context, Point windowSize) {
         super(context);
@@ -67,6 +92,22 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         this.onSwipeTouchListener = new OnSwipeTouchListener(context, grid);
         this.setOnTouchListener(onSwipeTouchListener);
 
+        //Media register (for mic)
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        audioInput = new File(context.getFilesDir() + "/ballparty.3gp");
+        mediaRecorder.setOutputFile(audioInput.getAbsolutePath());
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        } catch (IOException e) {
+            Log.d("GAME", e.getMessage());
+        }
+
+        micHandler = new Handler();
+        micHandler.postDelayed(micThread, 0);
     }
 
     public void initializeSensors(SensorManager sm){
