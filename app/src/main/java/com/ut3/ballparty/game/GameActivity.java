@@ -4,6 +4,7 @@ import com.ut3.ballparty.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.view.Display;
 import android.hardware.Sensor;
@@ -16,10 +17,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import java.io.File;
+
 public class GameActivity extends Activity  {
 
     private SensorManager sm = null;
     GameView gameView;
+
+    private MediaRecorder mediaRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
