@@ -13,11 +13,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
-public class GameActivity extends Activity implements SensorEventListener {
+public class GameActivity extends Activity  {
 
     private SensorManager sm = null;
-    private boolean flag;
-    private Handler mHandler;
+    GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +25,12 @@ public class GameActivity extends Activity implements SensorEventListener {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        setContentView(new GameView(this, size));
+
+        gameView = new GameView(this, size);
+        setContentView(gameView);
         
         // gyro sensor
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-        flag = true;
-        mHandler = new Handler();
     }
 
     /*
@@ -48,50 +47,16 @@ public class GameActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-        Sensor mMagneticField = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sm.registerListener(this, mMagneticField, SensorManager.SENSOR_DELAY_NORMAL);
+        gameView.initializeSensors(sm);
     }
 
     @Override
     protected void onStop(){
+        gameView.stopSensors(sm);
         super.onStop();
-        sm.unregisterListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
     }
 
-    private final Runnable mUpdateSwipTask = new Runnable(){
-        public void run(){
-            flag = true;
-        }
-    };
 
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        if(flag) {
-            int sensor = sensorEvent.sensor.getType();
-            float[] values = sensorEvent.values;
 
-            synchronized (this) {
-                if (sensor == Sensor.TYPE_ACCELEROMETER) {
-                    float x = values[0];
-                    //float y = values[1];
-                    //float z = values[2];
-                    //Log.d("onSensorChanged", " x= " + x + " y= " + y + " z= " + z );
-                    if ((int) x > 8) {
-                        flag = false;
-                        mHandler.postDelayed(mUpdateSwipTask, 1000);
-                        Log.d("onSensorChanged", " x= " + x + " on a penché vers la gauche");
-                    } else if ((int) x < -8) {
-                        flag = false;
-                        mHandler.postDelayed(mUpdateSwipTask, 1000);
-                        Log.d("onSensorChanged", " x= " + x + " on a penché vers la droite");
-                    }
-                }
-            }
-        }
-    }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
 }

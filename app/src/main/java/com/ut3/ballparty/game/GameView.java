@@ -5,6 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,6 +18,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.ut3.ballparty.game.sensors.OnSwipeTouchListener;
+import com.ut3.ballparty.game.sensors.OnTiltEventListener;
 import com.ut3.ballparty.game.threads.DrawThread;
 import com.ut3.ballparty.game.threads.UpdateThread;
 import com.ut3.ballparty.model.Grid;
@@ -36,6 +41,9 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
     private Handler tickHandler;
     private int tickTimer = 1000;
+
+    private OnSwipeTouchListener onSwipeTouchListener;
+    private OnTiltEventListener onTiltEventListener;
 
     public GameView(Context context, Point windowSize) {
         super(context);
@@ -62,8 +70,19 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         tickHandler.postDelayed(doTick, tickTimer);
 
         //swipe listener
-        this.setOnTouchListener(new OnSwipeTouchListener(context, grid));
+        this.onSwipeTouchListener = new OnSwipeTouchListener(context, grid);
+        this.setOnTouchListener(onSwipeTouchListener);
 
+    }
+
+    public void initializeSensors(SensorManager sm){
+        this.onTiltEventListener = new OnTiltEventListener(grid);
+        Sensor mMagneticField = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sm.registerListener(onTiltEventListener, mMagneticField, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void stopSensors(SensorManager sm){
+        sm.unregisterListener(onTiltEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
     }
 
     private Runnable doTick = new Runnable() {
@@ -133,9 +152,4 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
             retry = false;
         }
     }
-
-
-
-
-
 }
