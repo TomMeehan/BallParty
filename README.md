@@ -1,6 +1,6 @@
 # BallParty
 
-Contributeurs : Maxime COLIN, Gautier PEREZ, Tom MEEHAN, Lorea REDONDO
+Contributeurs : Maxime COLIN, Tom MEEHAN, Gautier PEREZ, Lorea REDONDO
 
 Pour lancer l'application : importer le projet dans Android Studio (choisir la branche master), le build, puis le lancer
 
