@@ -27,6 +27,8 @@ import com.ut3.ballparty.model.Obstacle;
 import com.ut3.ballparty.model.CalculSwitchEvent;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -38,9 +40,6 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
     private int cellHeight;
 
     private Grid grid;
-
-    private Handler tickHandler;
-    private int tickTimer = 1000;
 
     private OnSwipeTouchListener onSwipeTouchListener;
     private OnTiltEventListener onTiltEventListener;
@@ -59,15 +58,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         //Game Grid
         this.grid = new Grid();
 
-        this.grid.add(new Obstacle(Color.rgb(250, 0, 0), false), Grid.H_SIZE-1, 0);
-
         //Threads
         drawThread = new DrawThread(getHolder(), this);
-        updateThread = new UpdateThread(this);
+        updateThread = new UpdateThread(grid);
 
-        //Tick Handler
-        tickHandler = new Handler();
-        tickHandler.postDelayed(doTick, tickTimer);
 
         //swipe listener
         this.onSwipeTouchListener = new OnSwipeTouchListener(context, grid);
@@ -85,13 +79,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         sm.unregisterListener(onTiltEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
     }
 
-    private Runnable doTick = new Runnable() {
-        @Override
-        public void run() {
-            grid.tick();
-            tickHandler.postDelayed(this, tickTimer);
-        }
-    };
+
 
     @Override
     public void draw(Canvas canvas) {
@@ -123,8 +111,6 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
     }
-
-    public void update(){}
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {

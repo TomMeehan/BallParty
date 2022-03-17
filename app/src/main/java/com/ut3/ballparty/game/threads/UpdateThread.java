@@ -1,20 +1,47 @@
 package com.ut3.ballparty.game.threads;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.ut3.ballparty.game.GameView;
+import com.ut3.ballparty.game.ObjectGenerator;
+import com.ut3.ballparty.model.Grid;
+import com.ut3.ballparty.model.GridObject;
+
+import java.util.List;
+import java.util.Random;
 
 public class UpdateThread extends Thread {
 
     private boolean running;
-    private GameView gameView;
+    private Grid grid;
     private Handler updateHandler;
-    private int updateTimer = 1000/20;
+    private int updateTimer = 1000;
+    private boolean generateFlag = true;
 
-    public UpdateThread(GameView gameView) {
+    private ObjectGenerator generator;
+
+    public UpdateThread(Grid grid) {
         super();
         this.updateHandler = new Handler();
-        this.gameView = gameView;
+        this.grid = grid;
+        this.generator = new ObjectGenerator();
+    }
+
+    private void createNewLine(List<GridObject> objects){
+        int remainingCells = Grid.H_SIZE;
+        int chanceToPlace = 100/remainingCells;
+        Random rand = new Random();
+        while (objects.size() != 0){
+            int randomPos = rand.nextInt(100);
+            if (randomPos < chanceToPlace || objects.size() == remainingCells){
+                Log.d("GENERATE", "placing : " + (Grid.H_SIZE-remainingCells) +"," + 0);
+                grid.add(objects.get(0), Grid.H_SIZE-remainingCells, 0);
+                objects.remove(0);
+            }
+            remainingCells--;
+            if (remainingCells > 0) chanceToPlace = 100/remainingCells;
+        }
     }
 
     private Runnable doUpdate = new Runnable() {
@@ -26,9 +53,13 @@ public class UpdateThread extends Thread {
     };
 
 
-
     private void updateState(){
-        this.gameView.update();
+        grid.tick();
+        if (generateFlag) {
+            createNewLine(generator.generate());
+        }
+        generateFlag = !generateFlag;
+
     }
 
     @Override

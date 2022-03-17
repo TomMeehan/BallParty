@@ -15,7 +15,7 @@ public class OnTiltEventListener implements SensorEventListener {
     private final Grid grid;
 
     private final int TILT_THRESHOLD = 8;
-    private final int TILT_DELAY = 1000;
+    private final int TILT_DELAY = 10000;
 
     public OnTiltEventListener(Grid grid){
         //Accelerometre
@@ -46,10 +46,12 @@ public class OnTiltEventListener implements SensorEventListener {
                         tiltFlag = false;
                         tiltHandler.postDelayed(mUpdateSwipTask, TILT_DELAY);
                         Log.d("onSensorChanged", " x= " + x + " on a penché vers la gauche");
+                        grid.moveAllLeft();
                     } else if ((int) x < 0 - TILT_THRESHOLD) {
                         tiltFlag = false;
                         tiltHandler.postDelayed(mUpdateSwipTask, TILT_DELAY);
                         Log.d("onSensorChanged", " x= " + x + " on a penché vers la droite");
+                        grid.moveAllRight();
                     }
                 }
             }

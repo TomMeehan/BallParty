@@ -3,8 +3,11 @@ package com.ut3.ballparty.model;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.ut3.ballparty.game.ObjectGenerator;
 import com.ut3.ballparty.model.exceptions.PositionException;
 import com.ut3.ballparty.model.exceptions.UnhandledCollisionException;
+
+import java.util.List;
 
 public class Grid {
 
@@ -92,6 +95,40 @@ public class Grid {
                 }
             }
         }
+    }
+
+    public void moveAllLeft() {
+        for (int i = 0; i < H_SIZE; i++) {
+            for (int j = 0; j < V_SIZE - 1; j++) {
+                if (i == Position.LEFT) {
+                    remove(i, j);
+                } else {
+                    moveLeft(i,j);
+                }
+            }
+        }
+    }
+
+    public void moveAllRight() {
+        for (int i = H_SIZE - 1; i >= 0; i--){
+            for (int j = 0; j < V_SIZE - 1; j++){
+                if (i == Position.RIGHT){
+                    remove(i, j);
+                } else {
+                    moveRight(i, j);
+                }
+            }
+        }
+    }
+
+    private void moveLeft(int hPos, int vPos) {
+        add(grid[hPos][vPos], hPos-1, vPos);
+        remove(hPos,vPos);
+    }
+
+    private void moveRight(int hPos, int vPos) {
+        add(grid[hPos][vPos], hPos+1, vPos);
+        remove(hPos,vPos);
     }
 
     private void moveDown(int hPos, int vPos) {
