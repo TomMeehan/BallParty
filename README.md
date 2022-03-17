@@ -13,4 +13,6 @@ A propos :
 
 Le jeu a été testé sur les tablettes utilisées en cours.
 
+Adresse de ce dépôt Git : https://github.com/TomMeehan/BallParty
+
 Bon jeu à vous !
