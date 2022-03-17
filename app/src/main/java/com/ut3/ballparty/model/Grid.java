@@ -3,22 +3,25 @@ package com.ut3.ballparty.model;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.ut3.ballparty.game.GameView;
 import com.ut3.ballparty.game.ObjectGenerator;
 import com.ut3.ballparty.model.exceptions.PositionException;
 import com.ut3.ballparty.model.exceptions.UnhandledCollisionException;
 
-import java.util.List;
 
 public class Grid {
 
     public static final int H_SIZE = 3;
     public static final int V_SIZE = 6;
 
+    private final GameView gameView;
+
     private GridObject[][] grid = new GridObject[H_SIZE][V_SIZE];
     private int playerHPos = Position.CENTER;
     private final int playerVPos = V_SIZE-1;
 
-    public Grid(){
+    public Grid(GameView gameView){
+        this.gameView = gameView;
         this.grid[playerHPos][playerVPos] = new Player(Color.rgb(0, 0, 0));
     }
 
@@ -151,6 +154,7 @@ public class Grid {
         } else if (object instanceof Obstacle) {
             //GAME LOST
             Log.d("END", "you lost the game");
+            this.gameView.endGame();
         }
     }
 

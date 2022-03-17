@@ -1,6 +1,7 @@
 package com.ut3.ballparty.game;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -56,12 +58,11 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
 
         //Game Grid
-        this.grid = new Grid();
+        this.grid = new Grid(this);
 
         //Threads
         drawThread = new DrawThread(getHolder(), this);
         updateThread = new UpdateThread(grid);
-
 
         //swipe listener
         this.onSwipeTouchListener = new OnSwipeTouchListener(context, grid);
@@ -79,6 +80,22 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         sm.unregisterListener(onTiltEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
     }
 
+    public void endGame(){
+        boolean retry = true;
+        while (retry) {
+            try {
+                updateThread.setRunning(false);
+                updateThread.join();
+                drawThread.setRunning(false);
+                drawThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            retry = false;
+        }
+        Intent intent = new Intent(getContext(), EndingActivity.class);
+        getContext().startActivity(intent);
+    }
 
 
     @Override
@@ -115,7 +132,9 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         drawThread.start();
+        drawThread.setRunning(true);
         updateThread.start();
+        updateThread.setRunning(true);
     }
 
     @Override

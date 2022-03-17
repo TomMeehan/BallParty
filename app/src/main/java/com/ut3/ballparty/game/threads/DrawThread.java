@@ -12,8 +12,8 @@ public class DrawThread extends Thread{
     private GameView gameView;
     private Canvas canvas;
     private Handler drawHandler;
-    private boolean running;
     private int drawTimer = 1000/60;
+    private boolean running;
 
 
     private Runnable doDraw = new Runnable() {
@@ -62,5 +62,4 @@ public class DrawThread extends Thread{
     public void setRunning(boolean running) {
         this.running = running;
     }
-
 }

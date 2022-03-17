@@ -10,9 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BallParty">
         <activity
+            android:name=".game.EndingActivity"
+            android:exported="false" />
+        <activity
             android:name=".game.GameActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

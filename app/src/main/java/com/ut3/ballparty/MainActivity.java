@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ut3.ballparty.game.EndingActivity;
 import com.ut3.ballparty.game.GameActivity;
 
 public class MainActivity extends Activity {

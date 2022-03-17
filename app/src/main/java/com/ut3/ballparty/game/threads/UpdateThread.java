@@ -3,7 +3,6 @@ package com.ut3.ballparty.game.threads;
 import android.os.Handler;
 import android.util.Log;
 
-import com.ut3.ballparty.game.GameView;
 import com.ut3.ballparty.game.ObjectGenerator;
 import com.ut3.ballparty.model.Grid;
 import com.ut3.ballparty.model.GridObject;
@@ -13,11 +12,11 @@ import java.util.Random;
 
 public class UpdateThread extends Thread {
 
-    private boolean running;
     private Grid grid;
     private Handler updateHandler;
     private int updateTimer = 1000;
     private boolean generateFlag = true;
+    private boolean running = false;
 
     private ObjectGenerator generator;
 
@@ -47,8 +46,10 @@ public class UpdateThread extends Thread {
     private Runnable doUpdate = new Runnable() {
         @Override
         public void run() {
-            updateState();
-            updateHandler.postDelayed(this, updateTimer);
+            if (running){
+                updateState();
+                updateHandler.postDelayed(this, updateTimer);
+            }
         }
     };
 
@@ -67,7 +68,11 @@ public class UpdateThread extends Thread {
         doUpdate.run();
     }
 
-    public void setRunning(boolean isRunning) {
-        running = isRunning;
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }
