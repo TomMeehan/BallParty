@@ -2,6 +2,7 @@ package com.ut3.ballparty.game;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,9 +17,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.ut3.ballparty.R;
 import com.ut3.ballparty.game.sensors.OnSwipeTouchListener;
 import com.ut3.ballparty.game.sensors.OnTiltEventListener;
 import com.ut3.ballparty.game.threads.DrawThread;
@@ -40,6 +43,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
     private Point windowSize;
     private int cellWidth;
     private int cellHeight;
+
+    public Grid getGrid() {
+        return grid;
+    }
 
     private Grid grid;
 
@@ -70,6 +77,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+
     public void initializeSensors(SensorManager sm){
         this.onTiltEventListener = new OnTiltEventListener(grid);
         Sensor mMagneticField = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -93,6 +101,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
             }
             retry = false;
         }
+
         Intent intent = new Intent(getContext(), EndingActivity.class);
         getContext().startActivity(intent);
     }

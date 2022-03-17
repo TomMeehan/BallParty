@@ -1,5 +1,7 @@
 package com.ut3.ballparty.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -19,10 +21,12 @@ public class Grid {
     private GridObject[][] grid = new GridObject[H_SIZE][V_SIZE];
     private int playerHPos = Position.CENTER;
     private final int playerVPos = V_SIZE-1;
+    private Player player;
 
     public Grid(GameView gameView){
         this.gameView = gameView;
-        this.grid[playerHPos][playerVPos] = new Player(Color.rgb(0, 0, 0));
+        this.player = new Player(Color.rgb(0, 0, 0));
+        this.grid[playerHPos][playerVPos] = player;
     }
 
     public GridObject get(int hPos, int vPos) {
@@ -98,6 +102,14 @@ public class Grid {
                 }
             }
         }
+    }
+
+    public void updateScore(){
+        this.player.addScore(1);
+    }
+
+    public int getScore(){
+        return this.player.getScore();
     }
 
     public void moveAllLeft() {

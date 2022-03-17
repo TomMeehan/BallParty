@@ -56,6 +56,7 @@ public class UpdateThread extends Thread {
 
     private void updateState(){
         grid.tick();
+        grid.updateScore();
         if (generateFlag) {
             createNewLine(generator.generate());
         }

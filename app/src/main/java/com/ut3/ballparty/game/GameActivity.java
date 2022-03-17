@@ -2,7 +2,9 @@ package com.ut3.ballparty.game;
 
 import com.ut3.ballparty.R;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -34,6 +36,12 @@ public class GameActivity extends Activity  {
         display.getSize(size);
 
         gameView = new GameView(this, size);
+        int score = gameView.getGrid().getScore();
+        SharedPreferences sharedScore = this.getSharedPreferences("score",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedScore.edit();
+        editor.putInt("score", score);
+        editor.apply();
+
         setContentView(gameView);
         
         // gyro sensor
