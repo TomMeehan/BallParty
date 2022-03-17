@@ -10,22 +10,26 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MicTestActivity extends AppCompatActivity {
 
     private TextView dbText;
+    private Button pitieStop;
 
-    private double volume;
     private MediaRecorder mediaRecorder;
+    private File audioInput;
 
     private Handler handler;
     private Runnable dbThread = new Runnable() {
         @Override
         public void run() {
-            dbText.setText("" + computeVolume());
+            dbText.setText("" + getAmplitude());
             handler.postDelayed(this, 100);
         }
     };
@@ -33,8 +37,6 @@ public class MicTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        volume = 0;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
@@ -44,16 +46,15 @@ public class MicTestActivity extends AppCompatActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        //mediaRecorder.setOutputFile("${externalCacheDir.absolutePath}/test.3gp"); // "/dev/null" fait planter visiblement
-        Log.d("MicTestActivityStarted", "Files location: " + getFilesDir());
-        mediaRecorder.setOutputFile(getFilesDir() + "/test.3gp"); // "/dev/null" fait planter visiblement, mais au moins il prepare
+        audioInput = new File(getFilesDir() + "/ballparty.3gp");
+        mediaRecorder.setOutputFile(audioInput.getAbsolutePath());
         try {
             mediaRecorder.prepare();
-            Log.d("MicTestActivityStarted", "Media recorder prepared I guess?");
+            Log.d("MicTestActivityStarted", "Media recorder prepared");
             mediaRecorder.start();
-            Log.d("MicTestActivityStarted", "Media recorder started I guess?");
+            Log.d("MicTestActivityStarted", "Media recorder started");
         } catch (Exception e) {
-            Log.d("MicTestActivityStarted", "HOLY SHIT BRO IT DIDN'T WORK");
+            Log.d("MicTestActivityStarted", "Error while preparing/starting MediaRecorder");
             Log.d("MicTestActivityStarted", e.getMessage());
         }
 
@@ -61,17 +62,24 @@ public class MicTestActivity extends AppCompatActivity {
 
         dbText = ((TextView) this.findViewById(R.id.textView3));
 
+        pitieStop = ((Button) this.findViewById(R.id.button2));
+        pitieStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+                Log.d("MicTestActivityStop", "MediaRecorder stopped");
+                if (audioInput.delete()) {
+                    Log.d("MicTestActivityStop", "Audio input successfully deleted");
+                } else {
+                    Log.d("MicTestActivityStop", "AUDIO INPUT NOT DELETED PLS SEND HELP PL-");
+                }
+            }
+        });
+
         handler = new Handler();
         handler.postDelayed(dbThread, 0);
-    }
-
-    public double computeVolume() {
-        if (mediaRecorder != null) {
-            double volume = 20 * Math.log10(this.getAmplitude());
-            Log.d("MicTestActivity", "Volume: " + volume);
-            return volume;
-        }
-        return 0;
     }
 
     private double getAmplitude() {
