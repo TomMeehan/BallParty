@@ -8,8 +8,7 @@ import java.util.ArrayList;
 public class CalculSwitchEvent {
 
 
-    public CalculSwitchEvent() {
-    }
+    public CalculSwitchEvent() {}
 
     public int calculateDirection(ArrayList<Integer> listEvent) {
         int retour = 1;

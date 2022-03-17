@@ -26,9 +26,6 @@ public class GameActivity extends Activity implements SensorEventListener {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-
-        
-        findViewById(R.id.button);
         setContentView(new GameView(this, size));
         
         // gyro sensor

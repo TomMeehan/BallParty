@@ -7,24 +7,18 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Display;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.ut3.ballparty.game.sensors.OnSwipeTouchListener;
 import com.ut3.ballparty.game.threads.DrawThread;
 import com.ut3.ballparty.game.threads.UpdateThread;
 import com.ut3.ballparty.model.Grid;
 import com.ut3.ballparty.model.GridObject;
 import com.ut3.ballparty.model.Obstacle;
-import com.ut3.ballparty.model.Player;
-import com.ut3.ballparty.model.exceptions.PositionException;
 import com.ut3.ballparty.model.CalculSwitchEvent;
 
 import java.util.ArrayList;
@@ -33,12 +27,6 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
 
     private final DrawThread drawThread;
     private final UpdateThread updateThread;
-
-    private final CalculSwitchEvent calculSwitchEvent;
-    private ArrayList<Integer> listEvent;
-    private int i;
-    private boolean flag;
-    private final Handler mHandler;
 
     private Point windowSize;
     private int cellWidth;
@@ -72,6 +60,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         //Tick Handler
         tickHandler = new Handler();
         tickHandler.postDelayed(doTick, tickTimer);
+
+        //swipe listener
+        this.setOnTouchListener(new OnSwipeTouchListener(context, grid));
+
     }
 
     private Runnable doTick = new Runnable() {
@@ -113,18 +105,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public void update(){
-        drawThread = new DrawThread();
-        updateThread = new UpdateThread();
-
-        //onTouch Swap
-        calculSwitchEvent = new CalculSwitchEvent();
-        i = 0;
-        flag = true;
-        mHandler = new Handler();
-
-
-    }
+    public void update(){}
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
@@ -153,35 +134,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private final Runnable mUpdateSwipTask = new Runnable(){
-        public void run(){
-            flag = true;
-        }
-    };
 
-    @Override
-    public boolean onTouchEvent (MotionEvent event){
-        if(flag){
-            int action = event.getActionMasked();
-            switch (action){
-                case MotionEvent.ACTION_DOWN:
-                    i = 0;
-                    listEvent = new ArrayList<>();
-                case MotionEvent.ACTION_MOVE:
-                    i++;
-                    listEvent.add((int)event.getX());
-                    if(i>10) {
-                        flag = false;
-                        mHandler.postDelayed(mUpdateSwipTask, 300);
-                        int direction = calculSwitchEvent.calculateDirection(listEvent);
-                        Log.d("MOVE switch direction", String.valueOf(direction));
-                    }
-            }
-
-        }
-
-        return true;
-    }
 
 
 

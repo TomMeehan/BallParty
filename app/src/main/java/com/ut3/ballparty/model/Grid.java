@@ -56,6 +56,10 @@ public class Grid {
                 } catch (UnhandledCollisionException e) {
                     Log.d("COLLISION", e.getMessage());
                 }
+            } else {
+                add(grid[playerHPos][playerVPos], playerHPos - 1, playerVPos);
+                remove(playerHPos, playerVPos);
+                playerHPos--;
             }
         }
     }
@@ -68,6 +72,10 @@ public class Grid {
                 } catch (UnhandledCollisionException e) {
                     Log.d("COLLISION", e.getMessage());
                 }
+            } else {
+                add(grid[playerHPos][playerVPos], playerHPos + 1, playerVPos);
+                remove(playerHPos, playerVPos);
+                playerHPos++;
             }
         }
     }
