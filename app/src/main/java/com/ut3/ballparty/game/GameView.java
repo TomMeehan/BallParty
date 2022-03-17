@@ -118,7 +118,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         micHandler = new Handler();
-        micHandler.postDelayed(micThread, 0);
+        micThread.run();
     }
 
 
