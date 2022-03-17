@@ -18,10 +18,9 @@ import com.ut3.ballparty.game.EndingActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.ut3.ballparty.game.GameActivity;
+import com.ut3.ballparty.game.RulesActivity;
 
 public class MainActivity extends Activity {
-
-    private ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +30,6 @@ public class MainActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
-
-        image = (ImageView) findViewById(R.id.img);
 
         TextView scoreValue = findViewById(R.id.scoreValue);
         SharedPreferences sharedScore = this.getPreferences(Context.MODE_PRIVATE);
@@ -46,6 +43,11 @@ public class MainActivity extends Activity {
 
     public void startGame(View view) {
         Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
+    public void startRulesActivity(View view) {
+        Intent intent = new Intent(this, RulesActivity.class);
         startActivity(intent);
     }
 }
