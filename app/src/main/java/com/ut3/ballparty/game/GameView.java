@@ -138,6 +138,12 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
             }
             retry = false;
         }
+        //On ferme le MediaRecorder et on supprime le fichier créé
+        mediaRecorder.stop();
+        mediaRecorder.release();
+        mediaRecorder = null;
+        audioInput.delete();
+
         Intent intent = new Intent(getContext(), EndingActivity.class);
         getContext().startActivity(intent);
     }
