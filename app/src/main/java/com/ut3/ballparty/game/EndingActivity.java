@@ -22,12 +22,15 @@ public class EndingActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        SharedPreferences sharedScore = this.getPreferences(Context.MODE_PRIVATE);
-        int score = sharedScore.getInt("score",0);
-        TextView textView = (TextView) findViewById(R.id.score_textview);
-        textView.setText(String.valueOf(score));
-
         setContentView(R.layout.activity_ending);
+
+        SharedPreferences sharedScore = this.getSharedPreferences("score",Context.MODE_PRIVATE);
+        int score = sharedScore.getInt("score",0);
+
+
+        TextView textView = (TextView) findViewById(R.id.finalScoreText);
+        textView.setText(textView.getText()+String.valueOf(score));
+
     }
 
     public void toMenu(View view) {

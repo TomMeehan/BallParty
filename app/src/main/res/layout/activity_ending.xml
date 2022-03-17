@@ -21,9 +21,10 @@
         android:id="@+id/finalScoreText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score final : 0"
+        android:text="Score final : "
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameOver" />
 
@@ -31,18 +32,11 @@
         android:id="@+id/toMenuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recommencer"
         android:onClick="toMenu"
+        android:text="Recommencer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/finalScoreText" />
 
-    <TextView
-        android:id="@+id/score_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="264dp"
-        tools:layout_editor_absoluteY="123dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

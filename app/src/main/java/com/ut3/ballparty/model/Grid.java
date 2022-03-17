@@ -105,7 +105,7 @@ public class Grid {
     }
 
     public void updateScore(){
-        this.player.addScore(1);
+        this.player.addScore(10);
     }
 
     public int getScore(){

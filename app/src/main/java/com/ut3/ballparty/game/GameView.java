@@ -145,7 +145,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback {
             }
             retry = false;
         }
-
+        SharedPreferences sharedScore = getContext().getSharedPreferences("score",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedScore.edit();
+        editor.putInt("score", grid.getScore());
+        editor.apply();
         Intent intent = new Intent(getContext(), EndingActivity.class);
         getContext().startActivity(intent);
     }
