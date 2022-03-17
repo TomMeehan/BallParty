@@ -18,7 +18,7 @@ public class ObjectGenerator {
     private static final int TWO_OBJECTS_THRESHOLD = 40;
     private static final int THREE_OBJECTS_THRESHOLD = 90;
     private static final int IS_BONUS_THRESHOLD = 90;
-    private static final int IS_DESTRUCTIBLE_THRESHOLD = 0;//80;
+    private static final int IS_DESTRUCTIBLE_THRESHOLD = 80;
 
     private final int WALL_CD = 15000;
 

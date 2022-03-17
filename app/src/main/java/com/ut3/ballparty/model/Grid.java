@@ -138,6 +138,7 @@ public class Grid {
         if (grid[hPos][vPos + 1] != null){
             try {
                 handleCollision(grid[hPos][vPos + 1], grid[hPos][vPos]);
+                remove(hPos, vPos);
             } catch (UnhandledCollisionException e) {
                 Log.d("COLLISION", e.getMessage());
             }
@@ -151,6 +152,7 @@ public class Grid {
         if (!(player instanceof  Player)) throw new UnhandledCollisionException("Collision between two objects.");
         if (object instanceof Bonus){
             ((Player) player).addScore(((Bonus) object).getScore());
+
         } else if (object instanceof Obstacle) {
             //GAME LOST
             Log.d("END", "you lost the game");
