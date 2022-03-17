@@ -1,10 +1,12 @@
 package com.ut3.ballparty;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ut3.ballparty.game.EndingActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.ut3.ballparty.game.GameActivity;
 
 public class MainActivity extends Activity {
@@ -34,6 +38,10 @@ public class MainActivity extends Activity {
         SharedPreferences sharedScore = this.getPreferences(Context.MODE_PRIVATE);
         int score = sharedScore.getInt("score",0);
         scoreValue.setText(String.valueOf(score));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
+        }
     }
 
     public void startGame(View view) {

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Tom/AndroidStudioProjects/BallParty/app/src/main/res/drawable/ic_alien1.xml" value="0.1455" />
         <entry key="..\:/Users/Tom/AndroidStudioProjects/BallParty/app/src/main/res/layout/activity_ending.xml" value="0.4" />
         <entry key="..\:/Users/Tom/AndroidStudioProjects/BallParty/app/src/main/res/layout/activity_game.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Tom/AndroidStudioProjects/BallParty/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />

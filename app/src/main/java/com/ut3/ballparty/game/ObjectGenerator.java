@@ -18,7 +18,7 @@ public class ObjectGenerator {
     private static final int TWO_OBJECTS_THRESHOLD = 40;
     private static final int THREE_OBJECTS_THRESHOLD = 90;
     private static final int IS_BONUS_THRESHOLD = 90;
-    private static final int IS_DESTRUCTIBLE_THRESHOLD = 80;
+    private static final int IS_DESTRUCTIBLE_THRESHOLD = 0;//80;
 
     private final int WALL_CD = 15000;
 
@@ -56,13 +56,13 @@ public class ObjectGenerator {
             GridObject object;
             int bonusChance = rand.nextInt(100) + 1;
             if (bonusChance > IS_BONUS_THRESHOLD){
-                object = new Bonus(Color.rgb(0, 0, 250), 1000);
+                object = new Bonus(1000);
             } else {
                 int destructibleChance = rand.nextInt(100) + 1;
                 if (destructibleChance > IS_DESTRUCTIBLE_THRESHOLD){
-                    object = new Obstacle(Color.rgb(0, 250, 0), true);
+                    object = new Obstacle(true);
                 } else {
-                    object = new Obstacle(Color.rgb(250, 0, 0), false);
+                    object = new Obstacle(false);
                 }
             }
             generatedObjects.add(object);

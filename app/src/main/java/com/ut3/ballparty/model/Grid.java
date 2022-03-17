@@ -174,4 +174,12 @@ public class Grid {
         if (hPos >= H_SIZE || hPos < 0) throw new PositionException("Object out of horizontal grid!");
         if (vPos >= V_SIZE || vPos < 0) throw new PositionException("Object out of vertical grid!");
     }
+
+    public int getPlayerHPos() {
+        return playerHPos;
+    }
+
+    public int getPlayerVPos() {
+        return playerVPos;
+    }
 }
